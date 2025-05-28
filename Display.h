@@ -4,8 +4,9 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-char pass[8]; 
+char pass[8];
 int size = 0;
+
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -14,23 +15,34 @@ void inicializarLCD() {
   lcd.backlight();
   lcd.setCursor(0, 0);
   lcd.print("    FECHADURA");
+  lcd.setCursor(0, 1);
+  lcd.print("Senha: ");
 }
 
-
 void imprimirLCD(char digit) {
- 
-  lcd.setCursor(0, 1);
-  pass[size++] = digit;
+  if (size < 8) {
+    pass[size++] = digit;
 
-  for(int i = 0; i<size; i++){
-    lcd.print(pass[i]);
+    int posicao = 7 + size - 1;
+
+    lcd.setCursor(posicao, 1);
+    lcd.print(digit);
+    delay(300);
+
+    lcd.setCursor(posicao, 1);
+    lcd.print('*');
   }
+}
 
-  delay(500);
-  pass[size-1] = "*";
+void imprimirCorrecao() {
+  if (size > 0) {
+    size--;
+    pass[size] = '\0';
 
-  for(int i = 0; i<size; i++){
-    lcd.print(pass[i]);
+    int posicao = 7 + size;
+
+    lcd.setCursor(posicao, 1);
+    lcd.print(' ');
   }
 }
 

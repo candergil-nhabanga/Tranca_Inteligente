@@ -58,11 +58,7 @@ int caracterValido(int caracter){
 
 
 void apagar(){
-
-  Serial.println("apagar");
-  cadeia[index]='_';
-  if(index > 0)index--;
-  
+   imprimirCorrecao();
 }
 
 void validar(){
