@@ -5,41 +5,39 @@
 char cadeia[tamanhoMax];
 int index = 0;
 
-void setup(){
+void setup() {
   inicializarLCD();
-  char senha1[4]={'0','0','0','0'};
+  char senha1[4] = { '0', '0', '0', '0' };
   setSenha(senha1);
   Serial.begin(9600);
 }
 
-void loop(){
+void loop() {
 
- char key = keypad.getKey();
- 
- receberCaracteres(key);
- imprimir(key);
- indexVef();
- 
- switch(key){
+  char key = keypad.getKey();
 
-  case '*':
-    apagar();
-    break;
-  
-  case '#':
-    validar();
-    break;
+  receberCaracteres(key);
+  imprimir(key);
+  indexVef();
 
- }
- 
+  switch (key) {
+
+    case '*':
+      apagar();
+      break;
+
+    case '#':
+      validar();
+      break;
+  }
 }
 
-void receberCaracteres(char key){
+void receberCaracteres(char key) {
 
-  if(caracterValido((int)key)){
+  if (caracterValido((int)key)) {
 
     cadeia[index] = key;
-    index ++;
+    index++;
     Serial.print("Key ");
 
     Serial.print(key);
@@ -49,49 +47,40 @@ void receberCaracteres(char key){
 }
 
 
-int caracterValido(int caracter){
+int caracterValido(int caracter) {
 
-  if(caracter > 47 && caracter < 58)return 1;
-  
+  if (caracter > 47 && caracter < 58) return 1;
+
   return 0;
-}  
-
-
-void apagar(){
-   imprimirCorrecao();
-}
-
-void validar(){
-  
-    Serial.println("validar");
-  
-    if(senhaAceite(cadeia, index)){
-  
-      //abrir fechadura
-      Serial.println("Fechadura aberta");
-    }
-  
-    index = 0;
 }
 
 
-void indexVef(){
-
-    if(index > 7 || index < 0){
-      
-      index = 0;
-    }
-}
-
-void imprimir(char key){
-
-  if(caracterValido(key)){
-
-    imprimirLCD(key);
+void validar() {
+  if (!validacao()) {
+    lcd.setCursor(1, 1);
+    lcd.print("Senha Errada!");
+    inicializarLCD();
+    return;
   }
 
+  lcd.setCursor(4, 1);
+  lcd.print("Aberto!");
+  delay(10000);
+  inicializarLCD();
 }
 
 
+void indexVef() {
 
-    
+  if (index > 7 || index < 0) {
+
+    index = 0;
+  }
+}
+
+void imprimir(char key) {
+
+  if (caracterValido(key)) {
+    imprimirLCD(key);
+  }
+}
